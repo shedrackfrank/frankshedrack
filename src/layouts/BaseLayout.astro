@@ -2,7 +2,7 @@
 import "../styles/global.css";
 import { ClientRouter } from "astro:transitions";
 import Cursor from "../components/islands/Cursor";
-import { name, title as jobTitle } from "../data/site";
+import { name, title as jobTitle, SITE_URL } from "../data/site";
 
 interface Props {
   title?: string;
@@ -20,7 +20,7 @@ const {
   noindex = false,
 } = Astro.props;
 
-const site = Astro.site ?? new URL("https://example.com");
+const site = Astro.site ?? new URL(SITE_URL);
 const canonicalUrl = new URL(Astro.url.pathname, site).href;
 const ogImageUrl = new URL(image, site).href;
 const ogImageAlt = `${name} — ${jobTitle}`;

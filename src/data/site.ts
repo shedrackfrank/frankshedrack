@@ -20,8 +20,7 @@ export interface Skill {
   tag: string;
 }
 
-// TODO: replace with the real production domain at deployment.
-export const SITE_URL = "https://example.com";
+export const SITE_URL = "https://frankshedrack.pages.dev";
 
 export const name = "Frank Shedrack Chigozie";
 

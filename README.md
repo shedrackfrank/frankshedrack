@@ -30,7 +30,7 @@ npm run preview  # preview the production build
 
 ## Change the site URL
 
-Edit `SITE_URL` in `src/data/site.ts` (used for canonical, Open Graph, robots.txt, and sitemap). Replace the `https://example.com` placeholder at deployment.
+Edit `SITE_URL` in `src/data/site.ts` (used for canonical, Open Graph, robots.txt, and sitemap). It is currently set to `https://frankshedrack.pages.dev`.
 
 ## Image/asset conventions
 
