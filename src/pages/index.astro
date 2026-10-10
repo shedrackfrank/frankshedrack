@@ -1,0 +1,43 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/layout/Header.astro";
+import SocialRail from "../components/layout/SocialRail.astro";
+import Hero from "../components/sections/Hero.astro";
+import SelectedWork from "../components/sections/SelectedWork.astro";
+import About from "../components/sections/About.astro";
+import Skills from "../components/sections/Skills.astro";
+import Education from "../components/sections/Education.astro";
+import Contact from "../components/sections/Contact.astro";
+import Footer from "../components/layout/Footer.astro";
+import MobileDock from "../components/layout/MobileDock.astro";
+import { name, title, socials, education, SITE_URL } from "../data/site";
+
+const personJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name,
+  jobTitle: title,
+  url: SITE_URL,
+  sameAs: socials.filter((social) => social.href.startsWith("http")).map((social) => social.href),
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: education.school,
+  },
+});
+---
+
+<BaseLayout>
+  <script type="application/ld+json" set:html={personJsonLd} />
+  <Header />
+  <SocialRail />
+  <main id="main">
+    <Hero />
+    <SelectedWork />
+    <About />
+    <Skills />
+    <Education />
+    <Contact />
+  </main>
+  <Footer />
+  <MobileDock />
+</BaseLayout>

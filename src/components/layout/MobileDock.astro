@@ -1,0 +1,18 @@
+---
+import { nav } from "../../data/site";
+const dockItems = nav.filter((item) => item.label !== "Home");
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) => href === "/#work" && pathname.startsWith("/work");
+---
+
+<nav class="mobile-dock" aria-label="Mobile">
+  {dockItems.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a>)}
+</nav>
+
+<style>
+  .mobile-dock { position: fixed; z-index: 5; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); left: 12px; display: flex; height: 60px; align-items: center; padding: 0 6px; border: 1px solid var(--token-line); border-radius: var(--radius-pill); background: var(--token-surface); }
+  .mobile-dock a { display: flex; min-width: 0; min-height: 48px; flex: 1; align-items: center; justify-content: center; color: var(--token-muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.06em; text-decoration: none; }
+  .mobile-dock a:active, .mobile-dock a:focus-visible { color: var(--token-accent); }
+  .mobile-dock a[aria-current="page"] { color: var(--token-fg); }
+  @media (min-width: 768px) { .mobile-dock { display: none; } }
+</style>

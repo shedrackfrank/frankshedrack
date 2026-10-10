@@ -1,0 +1,128 @@
+---
+import "../styles/global.css";
+import { ClientRouter } from "astro:transitions";
+import Cursor from "../components/islands/Cursor";
+import { name, title as jobTitle } from "../data/site";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: "website" | "article";
+  noindex?: boolean;
+}
+
+const {
+  title = `${name} — ${jobTitle}`,
+  description = "Portfolio of Frank Shedrack Chigozie: web projects and security assessments. Just building things I care about.",
+  image = "/og.png",
+  type = "website",
+  noindex = false,
+} = Astro.props;
+
+const site = Astro.site ?? new URL("https://example.com");
+const canonicalUrl = new URL(Astro.url.pathname, site).href;
+const ogImageUrl = new URL(image, site).href;
+const ogImageAlt = `${name} — ${jobTitle}`;
+---
+
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0a0c0d" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f3f4f1" media="(prefers-color-scheme: light)" />
+    <link rel="canonical" href={canonicalUrl} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    <meta property="og:site_name" content={name} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <ClientRouter />
+    <title>{title}</title>
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add("js");
+        if (window.__portfolioMotionSetup) return;
+        window.__portfolioMotionSetup = true;
+        root.classList.add("first-load");
+
+        function applyStoredTheme() {
+          try {
+            var stored = localStorage.getItem("theme");
+            root.dataset.theme = stored === "light" || stored === "dark" ? stored : "dark";
+          } catch (e) {
+            root.dataset.theme = "dark";
+          }
+        }
+        applyStoredTheme();
+
+        var revealObserver;
+        function initReveals() {
+          if (revealObserver) revealObserver.disconnect();
+          var targets = Array.prototype.slice.call(document.querySelectorAll("[data-reveal]"));
+          if (!targets.length) return;
+          var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          if (reduced || !("IntersectionObserver" in window)) {
+            targets.forEach(function (target) { target.classList.add("is-visible"); });
+            return;
+          }
+          revealObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                revealObserver.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.15, rootMargin: "0px 0px -8% 0px" });
+          targets.forEach(function (target) {
+            var bounds = target.getBoundingClientRect();
+            if (bounds.top < window.innerHeight && bounds.bottom > 0) {
+              target.classList.add("is-visible");
+              target.style.setProperty("--i", "0");
+            } else {
+              revealObserver.observe(target);
+            }
+          });
+        }
+
+        document.addEventListener("DOMContentLoaded", initReveals, { once: true });
+        document.addEventListener("astro:page-load", initReveals);
+        document.addEventListener("astro:after-swap", function () {
+          root.classList.add("js");
+          root.classList.remove("first-load");
+          applyStoredTheme();
+          if (document.querySelector("[data-custom-cursor]") && window.matchMedia("(hover: hover) and (pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            root.classList.add("has-custom-cursor");
+          }
+        });
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <slot />
+    <Cursor client:media="(hover: hover) and (pointer: fine)" transition:persist />
+  </body>
+</html>

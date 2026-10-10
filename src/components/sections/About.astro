@@ -1,0 +1,33 @@
+---
+import { about, focusAreas } from "../../data/site";
+---
+
+<section id="about" class="wrap section about" aria-labelledby="about-heading">
+  <div class="columns" data-reveal>
+    <h2 id="about-heading" class="section-label">About</h2>
+    <div class="about-content">
+      <p class="principle mono">{about.principle}</p>
+      <p class="lead">{about.lead}</p>
+      <p class="body">{about.body}</p>
+      <ul class="focus-areas">
+        {focusAreas.map((area, index) => (
+          <li><span class="focus-index mono">{String(index + 1).padStart(2, "0")}</span><span>{area}</span></li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section { padding-block: clamp(64px, 8vw, 96px); border-top: 1px solid var(--token-line); }
+  .columns { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 64px; }
+  .section-label { margin: 0; color: var(--token-accent); font-family: var(--font-mono); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; }
+  .principle { margin: 0 0 28px; color: var(--token-muted); font-size: 13px; }
+  .lead { margin: 0; color: var(--token-fg); font-size: clamp(24px, 2.6vw, 38px); font-weight: 500; letter-spacing: -0.015em; line-height: 1.28; }
+  .body { max-width: 640px; margin: 28px 0 0; color: var(--token-muted); font-size: 19px; line-height: 1.6; }
+  .focus-areas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 48px; row-gap: 0; margin: 56px 0 0; padding: 0; list-style: none; }
+  .focus-areas li { display: flex; align-items: baseline; gap: 16px; padding: 16px 0; border-top: 1px solid var(--token-line); color: var(--token-fg); font-size: 18px; }
+  .focus-index { color: var(--token-accent); font-size: 12px; }
+  @media (max-width: 899px) { .columns { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+  @media (max-width: 639px) { .focus-areas { grid-template-columns: minmax(0, 1fr); } }
+</style>

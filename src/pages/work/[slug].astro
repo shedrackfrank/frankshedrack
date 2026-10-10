@@ -1,0 +1,119 @@
+---
+import { Image } from "astro:assets";
+import { getCollection, render } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+import EvidenceBlock from "../../components/project/EvidenceBlock.astro";
+import FindingsTable from "../../components/project/FindingsTable.astro";
+import { getAdjacentProjects, type Project } from "../../lib/projects";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props as { entry: Project };
+const { data } = entry;
+const { Content } = await render(entry);
+const { next } = await getAdjacentProjects(entry.id);
+
+const hasText = (value?: string) => typeof value === "string" && value.trim() !== "";
+
+const webSections = [
+  { title: "Problem", value: data.problem },
+  { title: "What I built", value: data.longDescription },
+  { title: "Approach", value: data.approach },
+  { title: "Architecture", value: data.architecture },
+  { title: "Challenges", value: data.challenges },
+  { title: "Security considerations", value: data.securityConsiderations },
+  { title: "Outcome", value: data.outcome },
+  { title: "Lessons learned", value: data.lessonsLearned },
+].filter((section) => hasText(section.value));
+
+const findings = data.findings ?? [];
+const recommendations = (data.recommendations ?? []).filter(hasText);
+const gallery = data.gallery ?? [];
+
+const bodyHasContent = Boolean(entry.body?.replace(/\{\/\*[\s\S]*?\*\/\}/g, "").trim());
+
+// Continuous section numbers for the security layout, so hidden sections never leave gaps.
+const securitySections = [
+  { key: "target", title: "Target & scope", visible: hasText(data.target) || hasText(data.scope) },
+  { key: "methodology", title: "Methodology", visible: hasText(data.methodology) },
+  { key: "findings", title: "Findings", visible: findings.length > 0 },
+  { key: "evidence", title: "Evidence", visible: hasText(data.evidence) || gallery.length > 0 },
+  { key: "impact", title: "Risk & impact", visible: hasText(data.impact) },
+  { key: "recommendations", title: "Recommendations", visible: recommendations.length > 0 },
+  { key: "lessons", title: "Lessons learned", visible: hasText(data.lessonsLearned) },
+] as const;
+const securityNumbers: Record<string, string> = {};
+let sectionIndex = 0;
+for (const section of securitySections) {
+  if (section.visible) {
+    sectionIndex += 1;
+    securityNumbers[section.key] = String(sectionIndex).padStart(2, "0");
+  }
+}
+---
+
+<CaseStudyLayout entry={entry} next={next}>
+  {data.category === "web" ? (
+    webSections.map((section, index) => (
+      <section class="case-section">
+        <p class="eyebrow">{String(index + 1).padStart(2, "0")} — {section.title}</p>
+        <div class="section-content">
+          <h2>{section.title}</h2>
+          <p>{section.value}</p>
+        </div>
+      </section>
+    ))
+  ) : (
+    <>
+      {securityNumbers.target && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.target} — Target &amp; scope</p>
+        <div class="section-content">
+          <h2>Target &amp; scope</h2>
+          <dl class="definition-list">
+            {hasText(data.target) && <div><dt>Target</dt><dd>{data.target}</dd></div>}
+            {hasText(data.scope) && <div><dt>Scope</dt><dd>{data.scope}</dd></div>}
+          </dl>
+        </div>
+      </section>}
+      {securityNumbers.methodology && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.methodology} — Methodology</p>
+        <div class="section-content"><h2>Methodology</h2><p>{data.methodology}</p></div>
+      </section>}
+      {securityNumbers.findings && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.findings} — Findings</p>
+        <div class="section-content"><h2>Findings</h2><FindingsTable findings={findings} /></div>
+      </section>}
+      {securityNumbers.evidence && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.evidence} — Evidence</p>
+        <div class="section-content">
+          <h2>Evidence</h2>
+          {hasText(data.evidence) && <EvidenceBlock title="Evidence" variant="terminal" ariaLabel="Assessment evidence">{data.evidence}</EvidenceBlock>}
+          {gallery.map((image, index) => (
+            <div class="evidence-image">
+              <EvidenceBlock variant="image" caption={image.caption ?? `Image ${String(index + 1).padStart(2, "0")}`}>
+                <Image src={image.src} alt={image.alt} width={image.src.width} height={image.src.height} loading="lazy" decoding="async" />
+              </EvidenceBlock>
+            </div>
+          ))}
+        </div>
+      </section>}
+      {securityNumbers.impact && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.impact} — Risk &amp; impact</p>
+        <div class="section-content"><h2>Risk &amp; impact</h2><p>{data.impact}</p></div>
+      </section>}
+      {securityNumbers.recommendations && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.recommendations} — Recommendations</p>
+        <div class="section-content"><h2>Recommendations</h2><ol class="recommendations">{recommendations.map((item) => <li>{item}</li>)}</ol></div>
+      </section>}
+      {securityNumbers.lessons && <section class="case-section">
+        <p class="eyebrow">{securityNumbers.lessons} — Lessons learned</p>
+        <div class="section-content"><h2>Lessons learned</h2><p>{data.lessonsLearned}</p></div>
+      </section>}
+    </>
+  )}
+
+  {bodyHasContent && <div class="prose"><Content /></div>}
+</CaseStudyLayout>

@@ -1,0 +1,27 @@
+---
+import { education } from "../../data/site";
+---
+
+<section id="education" class="wrap section education" aria-labelledby="education-heading">
+  <div class="columns" data-reveal>
+    <h2 id="education-heading" class="section-label">Education</h2>
+    <div class="education-content">
+      <div>
+        <p class="school">{education.school}</p>
+        <p class="program">{education.program}</p>
+      </div>
+      <p class="years mono">{education.years}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section { padding-block: clamp(64px, 8vw, 96px); border-top: 1px solid var(--token-line); }
+  .columns { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); align-items: baseline; gap: 64px; }
+  .section-label { margin: 0; color: var(--token-accent); font-family: var(--font-mono); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; }
+  .education-content { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 16px 32px; }
+  .school { margin: 0; color: var(--token-fg); font-size: clamp(28px, 3.4vw, 46px); font-weight: 500; letter-spacing: -0.025em; line-height: 1.05; }
+  .program { margin: 12px 0 0; color: var(--token-muted); font-size: 18px; }
+  .years { margin: 0; color: var(--token-muted); font-size: 13px; }
+  @media (max-width: 899px) { .columns { grid-template-columns: minmax(0, 1fr); gap: 24px; } }
+</style>

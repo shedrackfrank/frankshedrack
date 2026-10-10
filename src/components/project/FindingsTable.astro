@@ -1,0 +1,43 @@
+---
+interface Finding { id: string; title: string; severity: string; status: string }
+interface Props { findings?: Finding[] }
+const { findings = [] } = Astro.props;
+const severityName = (value: string) => value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+---
+
+{findings.length > 0 && <div class="table-wrap">
+  <table>
+    <caption class="sr-only">Security assessment findings</caption>
+    <thead><tr><th scope="col">ID</th><th scope="col">Finding</th><th scope="col">Severity</th><th scope="col">Status</th></tr></thead>
+    <tbody>{findings.map((finding) => <tr>
+      <td data-label="ID" class="id mono">{finding.id}</td>
+      <td data-label="Finding">{finding.title}</td>
+      <td data-label="Severity"><span class:list={["severity", `severity-${finding.severity.toLowerCase()}`]}>{severityName(finding.severity)}</span></td>
+      <td data-label="Status">{finding.status}</td>
+    </tr>)}</tbody>
+  </table>
+</div>}
+
+<style>
+  .table-wrap { width: 100%; }
+  table { width: 100%; border-collapse: collapse; text-align: left; }
+  th { padding: 12px 16px; border-bottom: 1px solid var(--token-line); color: var(--token-muted); font-family: var(--font-mono); font-size: 12px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase; }
+  td { padding: 18px 16px; border-bottom: 1px solid var(--token-line); color: var(--token-fg); vertical-align: top; }
+  .id { color: var(--token-muted); font-size: 12px; }
+  .severity { display: inline-block; padding: 4px 9px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 500; }
+  .severity-critical { color: var(--token-severity-critical-fg); background: var(--token-severity-critical-bg); }
+  .severity-high { color: var(--token-severity-high-fg); background: var(--token-severity-high-bg); }
+  .severity-medium { color: var(--token-severity-medium-fg); background: var(--token-severity-medium-bg); }
+  .severity-low { color: var(--token-severity-low-fg); background: var(--token-severity-low-bg); }
+  .severity-info { color: var(--token-severity-info-fg); background: var(--token-severity-info-bg); }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; clip-path: inset(50%); }
+  @media (max-width: 639px) {
+    thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    table, tbody, tr, td { box-sizing: border-box; }
+    tr { margin-bottom: 16px; border: 1px solid var(--token-line); border-radius: var(--radius-media); }
+    td { display: flex; justify-content: space-between; gap: 16px; padding: 12px 14px; border-bottom: 1px solid var(--token-line); }
+    td:last-child { border-bottom: 0; }
+    td::before { content: attr(data-label); color: var(--token-muted); font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; }
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+interface Props { title?: string; caption?: string; variant?: "terminal" | "image"; ariaLabel?: string }
+const { title, caption, variant = "terminal", ariaLabel = title ?? "Evidence output" } = Astro.props;
+---
+
+{variant === "image" ? (
+  <figure class="image-evidence"><slot />{caption && <figcaption>{caption}</figcaption>}</figure>
+) : (
+  <figure class="terminal-evidence">
+    {title && <figcaption class="terminal-title mono">{title}</figcaption>}
+    <pre tabindex="0" aria-label={ariaLabel}><code><slot /></code></pre>
+    {caption && <p class="caption">{caption}</p>}
+  </figure>
+)}
+
+<style>
+  figure { margin: 0; }
+  .terminal-evidence { overflow: hidden; border: 1px solid var(--token-line); border-radius: var(--radius-media); background: var(--token-surface); }
+  .terminal-title { padding: 12px 16px; border-bottom: 1px solid var(--token-line); color: var(--token-muted); font-size: 12px; }
+  pre { max-width: 100%; margin: 0; padding: 20px; overflow-x: auto; color: var(--token-fg); font-family: var(--font-mono); font-size: 13px; line-height: 1.6; white-space: pre; }
+  .caption, figcaption { margin: 0; padding: 12px 16px 16px; color: var(--token-muted); font-size: 13px; }
+  .image-evidence { overflow: hidden; border: 1px solid var(--token-line); border-radius: var(--radius-media); background: var(--token-surface); }
+  .image-evidence :global(img) { display: block; width: auto; max-width: 100%; height: auto; margin-inline: auto; object-fit: contain; }
+</style>

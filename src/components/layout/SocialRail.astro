@@ -1,0 +1,26 @@
+---
+import { socials } from "../../data/site";
+import SocialIcon from "../ui/SocialIcon.astro";
+---
+
+<nav class="social-rail" aria-label="Social links">
+  <span class="rail-line" aria-hidden="true"></span>
+  {socials.map((social) => {
+    const isExternal = social.href.startsWith("http");
+    return (
+      <a href={social.href} title={social.label} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined}>
+        <SocialIcon name={social.icon} size={18} />
+        <span class="sr-only">{social.label}{isExternal ? " (opens in a new tab)" : ""}</span>
+      </a>
+    );
+  })}
+  <span class="rail-line" aria-hidden="true"></span>
+</nav>
+
+<style>
+  .social-rail { position: fixed; z-index: 2; top: 50%; left: 6px; display: none; flex-direction: column; align-items: center; gap: 4px; transform: translateY(-50%); }
+  .rail-line { width: 1px; height: 72px; background: var(--token-line); }
+  .social-rail a { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; color: var(--token-muted); text-decoration: none; transition: color var(--duration-fast) var(--easing-standard), transform var(--duration-fast) var(--easing-standard); }
+  .social-rail a:hover, .social-rail a:focus-visible { color: var(--token-accent); transform: translateY(-2px); }
+  @media (min-width: 1024px) { .social-rail { display: flex; } }
+</style>

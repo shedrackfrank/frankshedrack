@@ -1,0 +1,68 @@
+---
+import { Image } from "astro:assets";
+import frank from "../../assets/avatar/frank.jpg";
+import { ctaLabel, heroLine, name, socials, title } from "../../data/site";
+import { getProjects } from "../../lib/projects";
+import SocialIcon from "../ui/SocialIcon.astro";
+
+const projects = await getProjects();
+---
+
+<section id="top" class="wrap hero" aria-label="Introduction">
+  <div class="texture" aria-hidden="true"></div>
+  <div class="hero-content">
+    <div class="identity">
+      <div class="avatar reveal" style="--i: 4">
+        <Image src={frank} width={96} loading="eager" decoding="async" alt="Portrait of Frank Shedrack Chigozie" />
+      </div>
+      <p class="mono title reveal" style="--i: 0">{title}</p>
+    </div>
+    <h1 class="reveal" style="--i: 1">{name}</h1>
+    <p class="tagline reveal" style="--i: 2">{heroLine}</p>
+    <div class="hero-ctas reveal" style="--i: 3">
+      <a class="primary" href="#work">View selected work →</a>
+      <a class="secondary" href="#contact">{ctaLabel}</a>
+    </div>
+    <div class="hero-socials reveal" style="--i: 3">
+      {socials.map((social) => {
+        const isExternal = social.href.startsWith("http");
+        return (
+          <a href={social.href} title={social.label} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined}>
+            <SocialIcon name={social.icon} size={20} />
+            <span class="sr-only">{social.label}{isExternal ? " (opens in a new tab)" : ""}</span>
+          </a>
+        );
+      })}
+    </div>
+  </div>
+  <div class="bottom-row mono reveal-scroll" style="--i: 5">
+    <span>Scroll ↓</span>
+    <span>Selected work ({projects.length})</span>
+  </div>
+</section>
+
+<style>
+  .hero { position: relative; display: flex; min-height: 700px; flex-direction: column; justify-content: space-between; padding-top: 72px; padding-bottom: 96px; box-sizing: border-box; }
+  .texture { position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(var(--token-grid) 1px, transparent 1px), linear-gradient(90deg, var(--token-grid) 1px, transparent 1px); background-size: 64px 64px; -webkit-mask-image: radial-gradient(ellipse at 70% 20%, black 0%, transparent 68%); mask-image: radial-gradient(ellipse at 70% 20%, black 0%, transparent 68%); }
+  .hero-content, .bottom-row { position: relative; }
+  .identity { display: flex; align-items: center; gap: 16px; margin-bottom: 48px; }
+  .avatar { display: grid; width: 56px; height: 56px; flex: 0 0 56px; place-items: center; padding: 4px; box-sizing: border-box; overflow: hidden; border: 1px solid var(--token-accent); border-radius: 50%; }
+  .avatar img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 45%; }
+  .title { margin: 0; color: var(--token-muted); font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; }
+  h1 { max-width: 100%; margin: 0; color: var(--token-fg); font-size: clamp(52px, 8.6vw, 132px); font-weight: 600; letter-spacing: -0.035em; line-height: 0.94; overflow-wrap: anywhere; }
+  .tagline { max-width: 640px; margin: 36px 0 0; color: var(--token-muted); font-size: clamp(22px, 2.4vw, 32px); line-height: 1.25; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 44px; }
+  .hero-ctas a { min-height: 44px; padding: 14px 22px; box-sizing: border-box; border: 1px solid var(--token-line); border-radius: var(--radius-pill); font-size: 15px; font-weight: 500; text-decoration: none; transition: transform var(--duration-fast) var(--easing-standard), background-color var(--duration-fast) var(--easing-standard), color var(--duration-fast) var(--easing-standard); }
+  .hero-ctas a:hover { transform: translateY(-2px); }
+  .primary { border-color: var(--token-accent) !important; background: var(--token-accent); color: var(--token-accent-ink); }
+  .primary:hover { background: transparent; color: var(--token-accent); }
+  .secondary { color: var(--token-fg); }
+  .secondary:hover { border-color: var(--token-accent); }
+  .bottom-row { display: flex; justify-content: space-between; gap: 16px; color: var(--token-muted); font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; }
+  .hero-socials { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .hero-socials a { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid var(--token-line); border-radius: var(--radius-pill); color: var(--token-muted); text-decoration: none; transition: color var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard); }
+  .hero-socials a:hover, .hero-socials a:focus-visible, .hero-socials a:active { border-color: var(--token-accent); color: var(--token-accent); }
+  @media (min-width: 1024px) { .hero-socials { display: none; } }
+  @media (max-width: 767px) { .hero-ctas { flex-direction: column; gap: 12px; } .hero-ctas a { display: flex; width: 100%; height: 48px; align-items: center; justify-content: center; } }
+  @media (max-width: 600px) { .hero { min-height: 700px; padding-top: 56px; padding-bottom: 48px; } .identity { align-items: flex-start; margin-bottom: 40px; } h1 { font-size: clamp(52px, 13vw, 82px); } .bottom-row { font-size: 10px; } }
+</style>

@@ -1,0 +1,32 @@
+---
+import type { Project } from "../../lib/projects";
+import SocialIcon from "../ui/SocialIcon.astro";
+
+interface Props { entry: Project }
+const { entry } = Astro.props;
+const hasText = (value?: string) => typeof value === "string" && value.trim() !== "";
+const technologies = entry.data.technologies.filter(hasText);
+const links = [
+  entry.data.github && hasText(entry.data.github) && { label: "GitHub", href: entry.data.github, icon: "github" as const },
+  entry.data.liveDemo && hasText(entry.data.liveDemo) && { label: "Live demo", href: entry.data.liveDemo, icon: "external" as const },
+].filter(Boolean) as { label: string; href: string; icon: "github" | "external" }[];
+---
+
+<dl class="meta">
+  {hasText(entry.data.role) && <div class="meta-item"><dt>Role</dt><dd>{entry.data.role}</dd></div>}
+  {hasText(entry.data.status) && <div class="meta-item"><dt>Status</dt><dd>{entry.data.status}</dd></div>}
+  {technologies.length > 0 && <div class="meta-item technologies"><dt>Technologies</dt><dd>{technologies.map((technology) => <span>{technology}</span>)}</dd></div>}
+  {links.length > 0 && <div class="meta-item links"><dt>Links</dt><dd>{links.map((link) => <a href={link.href} title={link.label} target="_blank" rel="noopener noreferrer">{link.icon === "github" ? <SocialIcon name="github" size={18} /> : <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"/></svg>}<span class="sr-only">{link.label} (opens in a new tab)</span></a>)}</dd></div>}
+</dl>
+
+<style>
+  .meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 40px 0 0; border-top: 1px solid var(--token-line); }
+  .meta-item { min-width: 0; padding: 20px 24px 20px 0; border-bottom: 1px solid var(--token-line); }
+  .meta-item:nth-child(2n) { padding-left: 24px; border-left: 1px solid var(--token-line); }
+  dt { color: var(--token-muted); font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; }
+  dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 0; color: var(--token-fg); font-size: 15px; }
+  .technologies dd span { padding: 5px 9px; border: 1px solid var(--token-line); border-radius: var(--radius-pill); color: var(--token-muted); font-family: var(--font-mono); font-size: 11px; }
+  .links a { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; border: 1px solid var(--token-line); border-radius: var(--radius-pill); color: var(--token-muted); }
+  .links a:hover, .links a:focus-visible { color: var(--token-accent); border-color: var(--token-accent); }
+  @media (min-width: 1024px) { .meta { grid-template-columns: repeat(4, minmax(0, 1fr)); } .meta-item:nth-child(2n) { padding-left: 0; border-left: 0; } .meta-item + .meta-item { padding-left: 24px; border-left: 1px solid var(--token-line); } }
+</style>

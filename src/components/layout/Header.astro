@@ -1,0 +1,37 @@
+---
+import { ctaLabel, name, nav } from "../../data/site";
+import ThemeToggle from "./ThemeToggle.astro";
+import Logo from "../ui/Logo.astro";
+
+const pathname = Astro.url.pathname;
+const isCurrent = (href: string) => {
+  if (href === "/") return pathname === "/";
+  if (href === "/#work") return pathname.startsWith("/work");
+  return false;
+};
+---
+
+<header class="wrap header">
+  <a class="logo" href="/" aria-label={`${name}, home`}><Logo decorative /></a>
+  <nav aria-label="Primary">
+    {nav.map((item) => <a href={item.href} aria-current={isCurrent(item.href) ? "page" : undefined}>{item.label}</a>)}
+  </nav>
+  <div class="header-actions">
+    <ThemeToggle />
+    <a class="header-cta" href="/#contact">{ctaLabel}</a>
+  </div>
+</header>
+
+<style>
+  .header { display: flex; align-items: center; justify-content: space-between; padding-block: 28px; }
+  .logo { display: inline-flex; align-items: center; min-height: 44px; color: var(--token-fg); text-decoration: none; }
+  nav { display: flex; align-items: center; gap: 36px; }
+  nav a { padding: 8px 2px; border-bottom: 1px solid transparent; color: var(--token-muted); font-size: 15px; text-decoration: none; transition: color var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard); }
+  nav a:hover { color: var(--token-fg); border-color: var(--token-accent); }
+  nav a[aria-current="page"] { color: var(--token-fg); border-color: var(--token-accent); }
+  .header-actions { display: flex; align-items: center; gap: 18px; }
+  .header-cta { padding: 14px 22px; border: 1px solid var(--token-accent); border-radius: var(--radius-pill); color: var(--token-accent); font-size: 15px; font-weight: 500; text-decoration: none; transition: transform var(--duration-fast) var(--easing-standard); }
+  .header-cta:hover { transform: translateY(-2px); }
+  /* Mobile navigation and CTA are handled by the mobile dock. */
+  @media (max-width: 767px) { nav, .header-cta { display: none; } }
+</style>

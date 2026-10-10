@@ -1,0 +1,16 @@
+---
+import { name } from "../../data/site";
+const year = new Date().getFullYear();
+---
+
+<footer class="wrap mono">
+  <span>© {year} {name}</span>
+  <a href="#top">Back to top ↑</a>
+</footer>
+
+<style>
+  footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; padding-top: 28px; padding-bottom: 40px; border-top: 1px solid var(--token-line); color: var(--token-muted); font-size: 12px; }
+  footer a { display: inline-flex; align-items: center; min-height: 44px; color: inherit; text-decoration: none; }
+  footer a:hover { color: var(--token-fg); }
+  @media (max-width: 767px) { footer { padding-bottom: 96px; } }
+</style>

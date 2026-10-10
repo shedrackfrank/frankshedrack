@@ -1,0 +1,101 @@
+/* Design tokens — single source of truth (see docs/design-tokens.md).
+   Dark theme is the default; light theme overrides via [data-theme="light"]. */
+
+@import "tailwindcss";
+
+@theme {
+  --color-bg: var(--token-bg);
+  --color-surface: var(--token-surface);
+  --color-fg: var(--token-fg);
+  --color-muted: var(--token-muted);
+  --color-line: var(--token-line);
+  --color-grid: var(--token-grid);
+  --color-accent: var(--token-accent);
+  --color-accent-ink: var(--token-accent-ink);
+
+  --font-sans: "Bricolage Grotesque Variable", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, SFMono-Regular, Menlo, Consolas,
+    "Liberation Mono", monospace;
+
+  --container-max: 1312px;
+  --container-gutter: clamp(20px, 5vw, 72px);
+
+  --radius-pill: 999px;
+  --radius-media: 8px;
+
+  --duration-fast: 200ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+  --duration-cursor-press: 100ms;
+  --duration-hero-reveal: 800ms;
+  --duration-hero-avatar: 1000ms;
+  --duration-hero-grid: 1200ms;
+  --duration-hero-base-delay: 150ms;
+  --duration-hero-stagger: 130ms;
+  --duration-row-stagger: 60ms;
+  --easing-standard: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --easing-hero: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:root,
+[data-theme="dark"] {
+  --z-cursor: 20;
+  --token-bg: #0a0c0d;
+  --token-surface: #101315;
+  --token-fg: #e9edeb;
+  --token-muted: #8b9692;
+  --token-line: rgba(233, 237, 235, 0.1);
+  --token-grid: rgba(233, 237, 235, 0.045);
+  --token-accent: #46c2a8;
+  --token-accent-ink: #04201a;
+  --token-accent-ring: color-mix(in srgb, var(--token-accent) 55%, transparent);
+  --token-accent-wash: color-mix(in srgb, var(--token-accent) 12%, transparent);
+  --token-severity-critical-bg: #7f1d1d;
+  --token-severity-critical-fg: #ffffff;
+  --token-severity-high-bg: #7c2d12;
+  --token-severity-high-fg: #ffffff;
+  --token-severity-medium-bg: #713f12;
+  --token-severity-medium-fg: #ffffff;
+  --token-severity-low-bg: #14532d;
+  --token-severity-low-fg: #ffffff;
+  --token-severity-info-bg: #1e3a8a;
+  --token-severity-info-fg: #ffffff;
+
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --token-bg: #f3f4f1;
+  --token-surface: #eaece7;
+  --token-fg: #111514;
+  --token-muted: #56605c;
+  --token-line: rgba(17, 21, 20, 0.12);
+  --token-grid: rgba(17, 21, 20, 0.055);
+  --token-accent: #0d7563;
+  --token-accent-ink: #ffffff;
+  --token-accent-ring: color-mix(in srgb, var(--token-accent) 55%, transparent);
+  --token-accent-wash: color-mix(in srgb, var(--token-accent) 12%, transparent);
+  --token-severity-critical-bg: #fee2e2;
+  --token-severity-critical-fg: #7f1d1d;
+  --token-severity-high-bg: #ffedd5;
+  --token-severity-high-fg: #7c2d12;
+  --token-severity-medium-bg: #fef3c7;
+  --token-severity-medium-fg: #713f12;
+  --token-severity-low-bg: #dcfce7;
+  --token-severity-low-fg: #14532d;
+  --token-severity-info-bg: #dbeafe;
+  --token-severity-info-fg: #1e3a8a;
+
+  color-scheme: light;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}

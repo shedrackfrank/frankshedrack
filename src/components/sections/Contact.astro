@@ -1,0 +1,31 @@
+---
+import { contactLine, ctaLabel, socials } from "../../data/site";
+import SocialIcon from "../ui/SocialIcon.astro";
+---
+
+<section id="contact" class="wrap contact" aria-labelledby="contact-heading">
+  <h2 id="contact-heading" class="section-label" data-reveal>Contact</h2>
+  <p class="contact-heading" data-reveal>{ctaLabel}</p>
+  <p class="contact-line" data-reveal>{contactLine}</p>
+  <nav class="social-links mono" aria-label="Contact links" data-reveal>
+    {socials.map((social) => {
+      const isExternal = social.href.startsWith("http");
+      return (
+        <a class="social-icon" href={social.href} title={social.label} target={isExternal ? "_blank" : undefined} rel={isExternal ? "noopener noreferrer" : undefined}>
+          <SocialIcon name={social.icon} size={22} />
+          <span class="sr-only">{social.label}{isExternal ? " (opens in a new tab)" : ""}</span>
+        </a>
+      );
+    })}
+  </nav>
+</section>
+
+<style>
+  .contact { padding-block: clamp(80px, 10vw, 120px); border-top: 1px solid var(--token-line); }
+  .section-label { margin: 0; color: var(--token-accent); font-family: var(--font-mono); font-size: 13px; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; }
+  .contact-heading { margin: 36px 0 0; color: var(--token-fg); font-size: clamp(48px, 9vw, 140px); font-weight: 600; letter-spacing: -0.035em; line-height: 0.94; }
+  .contact-line { max-width: 520px; margin: 36px 0 0; color: var(--token-muted); font-size: 20px; line-height: 1.5; }
+  .social-links { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 40px; }
+  .social-icon { display: inline-flex; width: 48px; height: 48px; align-items: center; justify-content: center; border: 1px solid var(--token-line); border-radius: var(--radius-pill); color: var(--token-muted); text-decoration: none; transition: color var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard); }
+  .social-icon:hover, .social-icon:focus-visible, .social-icon:active { border-color: var(--token-accent); color: var(--token-accent); }
+</style>

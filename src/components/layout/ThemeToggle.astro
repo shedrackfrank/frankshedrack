@@ -1,0 +1,40 @@
+---
+---
+
+<button class="theme-toggle mono" type="button" aria-label="Switch colour theme" aria-pressed="false">
+  <svg aria-hidden="true" width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <circle cx="7" cy="7" r="6" stroke="currentColor" />
+    <path d="M7 1a6 6 0 0 0 0 12V1Z" fill="currentColor" />
+  </svg>
+  <span class="show-light">Light</span>
+  <span class="show-dark">Dark</span>
+</button>
+
+<style>
+  .theme-toggle { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 9px 14px; border: 1px solid var(--token-line); border-radius: var(--radius-pill); background: transparent; color: var(--token-muted); font-size: 12px; cursor: pointer; transition: color var(--duration-fast) var(--easing-standard), border-color var(--duration-fast) var(--easing-standard); }
+  .theme-toggle:hover { color: var(--token-fg); border-color: var(--token-accent); }
+  :global([data-theme="dark"]) .show-dark,
+  :global([data-theme="light"]) .show-light { display: none; }
+</style>
+
+<script>
+  import { getStoredTheme, setStoredTheme } from "../../lib/theme";
+
+  const bindThemeToggles = () => {
+    document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((button) => {
+      if (button.dataset.themeBound === "true") return;
+      button.dataset.themeBound = "true";
+      button.setAttribute("aria-pressed", String(getStoredTheme() === "light"));
+      button.addEventListener("click", () => {
+        const nextTheme = getStoredTheme() === "dark" ? "light" : "dark";
+        setStoredTheme(nextTheme);
+        document.querySelectorAll<HTMLButtonElement>(".theme-toggle").forEach((toggle) => {
+          toggle.setAttribute("aria-pressed", String(nextTheme === "light"));
+        });
+      });
+    });
+  };
+
+  bindThemeToggles();
+  document.addEventListener("astro:page-load", bindThemeToggles);
+</script>

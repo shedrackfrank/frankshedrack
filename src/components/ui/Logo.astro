@@ -1,0 +1,51 @@
+---
+interface Props {
+  width?: number;
+  /** Height in px; width is derived from the 64:72 viewBox when not provided. */
+  height?: number;
+  /** When true the mark is decorative (aria-hidden) because adjacent text or an aria-label describes it. */
+  decorative?: boolean;
+}
+
+const { width, height = 28, decorative = false } = Astro.props;
+const markWidth = width ?? Math.round((height * 64) / 72);
+---
+
+<svg
+  class="logo-mark"
+  width={markWidth}
+  height={height}
+  viewBox="0 0 64 72"
+  fill="none"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  role={decorative ? undefined : "img"}
+  aria-hidden={decorative ? "true" : undefined}
+  aria-label={decorative ? undefined : "Frank Shedrack Chigozie"}
+>
+  <g stroke="var(--token-accent)" stroke-width="9" transform="translate(3.2 3.2)">
+    <path d="M30 9C24 21 24 39 21 55" />
+    <path d="M23 15C33 8 46 8 56 13" />
+    <path d="M23 33C31 28 41 28.5 49 31" />
+  </g>
+  <g stroke="currentColor" stroke-width="9.5">
+    <path d="M30 9C24 21 24 39 21 55" />
+    <path d="M23 15C33 8 46 8 56 13" />
+    <path d="M23 33C31 28 41 28.5 49 31" />
+  </g>
+  <g stroke="currentColor">
+    <path d="M53 17V25" stroke-width="3.6" />
+    <path d="M21 58V64" stroke-width="3.6" />
+  </g>
+  <g fill="currentColor" stroke="none">
+    <circle cx="53" cy="28" r="3.4" />
+    <circle cx="21" cy="66.5" r="3.4" />
+  </g>
+  <path d="M27 14C25 22 25 30 24 38" stroke="var(--token-bg)" stroke-opacity=".3" stroke-width="1.8" />
+</svg>
+
+<style>
+  .logo-mark {
+    display: block;
+  }
+</style>

@@ -1,0 +1,36 @@
+# build output
+dist/
+
+# generated types and caches
+.astro/
+
+# dependencies
+node_modules/
+.pnpm-store/
+.npm/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+
+# environment variables
+.env
+.env.*
+!.env.example
+
+# deployment tool folders
+.vercel/
+.wrangler/
+.netlify/
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# editor settings
+.vscode/
+.idea/
